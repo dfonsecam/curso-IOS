@@ -1,38 +1,44 @@
 //
-//  NumbersTableViewController.swift
-//  Clase2-b
+//  DogsTableViewController.swift
+//  Clase3-a
 //
-//  Created by Diego Fonseca Marín on 5/11/17.
+//  Created by Diego Fonseca Marín on 5/16/17.
 //  Copyright © 2017 Diego Fonseca Marín. All rights reserved.
 //
 
 import UIKit
 
-class NumbersTableViewController: UITableViewController {
-    
-    var array = [Int]()
+class DogsTableViewController: UITableViewController {
 
+    let keyName = "keyName"
+    let keyColor = "keyColor"
+    let keyAge = "keyAge"
+    
+    var dataSource: [[String: Any]]?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        array = loadDataSource()
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+        registerCustomCell()
+        initializeDataSourceWithDictionary()
+    }
+    
+    func registerCustomCell() {
+        let nib = UINib(nibName: "DogTableViewCell", bundle: nil)
+        tableView.register(nib, forCellReuseIdentifier: "DogTableViewCell")
+    }
+    
+    func initializeDataSourceWithDictionary() {
+        let dog1 =  [keyName: "Bruno", keyColor: "Negro", keyAge: "2 años"]
+        let dog2 =  [keyName: "Dandy", keyColor: "Blanco", keyAge: "1 año"]
+        let dog3 =  [keyName: "Perla", keyColor: "Cafe", keyAge: "3 años"]
+        let dog4 =  [keyName: "Scoth", keyColor: "Negro", keyAge: "4 años"]
+        
+        dataSource = [dog1, dog2, dog3, dog4]
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
-    }
-    
-    func loadDataSource() -> [Int] {
-        var array = [Int]()
-        for index in 200...300 {
-            array.append(index)
-        }
-        return array
     }
 
     // MARK: - Table view data source
@@ -42,23 +48,35 @@ class NumbersTableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return array.count
+        guard let count = dataSource?.count else {
+            return 0
+        }
+        return count
     }
-
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "DogTableViewCell", for: indexPath) as! DogTableViewCell
         // Configure the cell...
-        let value  = array[indexPath.row]
-        cell.textLabel?.text = "\(value)"
+        let dictionary = dataSource![indexPath.row]
+        cell.nameLabel.text = (dictionary[keyName] as! String)
+        cell.colorLabel.text = (dictionary[keyColor] as! String)
+        cell.ageLabel.text = (dictionary[keyAge] as! String)
+
         return cell
     }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 200
+    }
 
+
+    /*
     // Override to support conditional editing of the table view.
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         // Return false if you do not want the specified item to be editable.
         return true
     }
+    */
 
     /*
     // Override to support editing the table view.
